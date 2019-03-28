@@ -7,5 +7,5 @@ import json
 def SaveDatabase():
     print("Saving...")
 
-with open('data.json', 'w') as outfile:
-    json.dump(data, outfile)
+# with open('data.json', 'w') as outfile:
+#     json.dump(data, outfile)

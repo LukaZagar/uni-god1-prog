@@ -1,6 +1,5 @@
 import ui
 
-
 class Korisnik:
     #Access levels
     #1.Bibliotekar
@@ -15,6 +14,9 @@ class Korisnik:
     def SetAccessLevel(self,level):
         self.accessLevel = level
 
+    def GetAccessLevel(self):
+        return self.accessLevel
+
     def AccessLevelToString(self):
         _tostringText = "No Data!"
         
@@ -24,10 +26,7 @@ class Korisnik:
             _tostringText = "Korisnik"
         
         return _tostringText
-        
-    def ShowMenu(self):
-        ui.showLogin(self.accessLevel)
-
+    
     def Delete(self,izbrisi):
         self.deleted = izbrisi
 

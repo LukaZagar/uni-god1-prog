@@ -13,29 +13,35 @@ _users[korisnik2.id] = korisnik2
 ### Name: verifyLogin
 ### Desc: Verifies if the inputed data is a valid user
 ### Param: user Table (Username string, Password string)
-### Returns : True/False (if we loged in successfully)
+### Returns : User if the login is successfull, false if unsucc
 def verifyLogin(user):
+    _username = user["Username"]
+    _pwd = user["Password"]
+
+    if _username == "Q" or "q":
+        return False # don't do a loop if he decides to quit
     for k,v in _users.items():  
-        if user["Username"] == v.username: #do we have a user with the specified name? 
-            if user["Password"] == v.password:
+        if _username == v.username: #do we have a user with the specified name? 
+            if _pwd == v.password:
                 ui.successfullLogin(v)
                 return _users[v.id]
             else:
                 print("Unete sifra nije tacna")
-        else: #no user found with that name
-            print("Korisnik sa imenom "+user["Username"]+" ne postoji u bazi!")
-            return False
+    
+    print("Korisnik sa imenom "+_username+" ne postoji u bazi!")
+    return False   
+            
 
 
 exit = False
 while not exit: # continious ui display
     logingInUser = ui.showLogin() # {username,pwd}
-    result = verifyLogin(logingInUser)
-    if not result == False: # we loged in successfully, show the second menu
+    user = verifyLogin(logingInUser)
+    if not user == False: # we loged in successfully, show the second menu
         _exit = False
         while not _exit:
-            _exit = ui.showUserMenu()
-            if _exit == "4":
+            _exit = ui.showUserMenu(user.GetAccessLevel())
+            if _exit == "Q" or "q":
                 _exit = True
         exit = True
 
