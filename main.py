@@ -1,5 +1,5 @@
 import knjiga
-from korisnik import Korisnik
+from Korisnik import Korisnik
 import ui
 _users = {}
 
@@ -15,11 +15,10 @@ _users[korisnik2.id] = korisnik2
 ### Param: user Table (Username string, Password string)
 ### Returns : User if the login is successfull, false if unsucc
 def verifyLogin(user):
+    if user == None : return 
     _username = user["Username"]
     _pwd = user["Password"]
 
-    if _username == "Q" or "q":
-        return False # don't do a loop if he decides to quit
     for k,v in _users.items():  
         if _username == v.username: #do we have a user with the specified name? 
             if _pwd == v.password:
@@ -39,6 +38,9 @@ while not exit: # continious ui display
     user = verifyLogin(logingInUser)
     if not user == False: # we loged in successfully, show the second menu
         _exit = False
+        if user == None:
+            print("ODUSTALI STE OD PRIJAVE")
+            _exit = True
         while not _exit:
             _exit = ui.showUserMenu(user.GetAccessLevel())
             if _exit == "Q" or "q":
