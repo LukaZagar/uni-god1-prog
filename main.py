@@ -43,7 +43,7 @@ while not exit: # continious ui display
             print("ODUSTALI STE OD PRIJAVE")
             _exit = True
         while not _exit:
-            _exit = ui.showUserMenu(user.GetAccessLevel())
+            _exit = ui.showUserMenu(user)
             if _exit == "Q" or "q":
                 _exit = True
         exit = True
