@@ -4,8 +4,9 @@ def showLogin():
     print("\n\nUlogovanje u sistem...")
     print('\n\nNapomena: Unesite "Q" ili "q" da odustanete od prijave')
     username = input("Unesite korisnicko ime: ")
-    if username == "Q" or "q" : return # ako zeli da izadje neidi dalje
+    if username == "Q" or username == "q" : return # ako zeli da izadje neidi dalje
     pwd = input("Unesite password: ")
+    
     return {
         "Username": str(username),
         "Password": str(pwd)

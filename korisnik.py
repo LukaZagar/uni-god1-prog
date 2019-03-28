@@ -5,9 +5,11 @@ class Korisnik:
     #1.Bibliotekar
     # NILL .Korisnik
 
-    def __init__(self,id,username,password):
+    def __init__(self,id,username,fname,lname,password):
         self.id = id
         self.username = username
+        self.fname = fname
+        self.lname = lname
         self.password = password
         self.accessLevel = 0
     

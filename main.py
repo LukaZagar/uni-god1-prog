@@ -1,14 +1,18 @@
 import knjiga
 from Korisnik import Korisnik
+from Bibliotekar import Bibliotekar
 import ui
 _users = {}
 
-korisnik1 = Korisnik(1,"LukaZ","123")
-korisnik2 = Korisnik(2,"Petar","321")
-korisnik2.SetAccessLevel(1) # set to bibliotekar
+korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
+bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
+#korisnik2.SetAccessLevel(1) # set to bibliotekar
 
-_users[korisnik1.id] = korisnik1
-_users[korisnik2.id] = korisnik2
+def addUserToDB(user):
+    _users[user.id] = user
+
+addUserToDB(korisnik1)
+addUserToDB(bibliotekar1)
 
 ### Name: verifyLogin
 ### Desc: Verifies if the inputed data is a valid user
@@ -20,15 +24,12 @@ def verifyLogin(user):
     _pwd = user["Password"]
 
     for k,v in _users.items():  
-        if _username == v.username: #do we have a user with the specified name? 
-            if _pwd == v.password:
-                ui.successfullLogin(v)
-                return _users[v.id]
-            else:
-                print("Unete sifra nije tacna")
-    
-    print("Korisnik sa imenom "+_username+" ne postoji u bazi!")
-    return False   
+        if _username == v.username and _pwd == v.password: #do we have a user with the specified name and pwd?            
+            ui.successfullLogin(v)
+            return _users[k]
+        
+    print("<NETACNA LOZINKA ILI KORISNICKO IME>")
+    return False  
             
 
 
