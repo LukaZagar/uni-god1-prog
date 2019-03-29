@@ -31,10 +31,9 @@ def showUserMenu(user):
     # userLevel = userLevel or 0
     
     print("Selektujte opciju:")
-    printModularMenu("mainMenu")
+    result = printModularMenu("mainMenu")
     
     print('Q.Izlaz iz sistema')
-    result = input("Unesite broj zeljene akcije: ")
     return result
 
 
@@ -86,12 +85,21 @@ _uiMenus = {
 
 
 def printModularMenu(id):
-    
+    result = False
     acclvl = activeUser.GetAccessLevel()
      
-    for k,v in _uiMenus[acclvl].items():
-        for _k,_v in v.items():
-            print("["+str(_k)+"] "+_v["text"])
+    for k,v in _uiMenus[acclvl][id].items():
+        print("["+str(k)+"] "+v["text"])
+
+    result = input("Unesite broj zeljene akcije:: ")
+
+    try:
+        printModularMenu(_uiMenus[acclvl][id][int(result)]["onSelect"]) # prikazi sledeci meni
+    except KeyError: # uneta pogresna ili nepostojeca vrednost
+        print("Ne postoji opcija "+str(result)+" u meniju "+str(k))
+        printModularMenu(id) # prikazi mu isti meni opet
+
+    return result
 
 
 
