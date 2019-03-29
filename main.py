@@ -1,33 +1,21 @@
 import knjiga
+
+import ui
+import db
+
 from Korisnik import Korisnik
 from Bibliotekar import Bibliotekar
-import ui
 
-_users = {}
 
-korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
-bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
-#korisnik2.SetAccessLevel(1) # set to bibliotekar
-
-def addUserToDB(user):
-    _users[user.id] = user
-
-addUserToDB(korisnik1)
-addUserToDB(bibliotekar1)
-
-### Name: verifyLogin
-### Desc: Verifies if the inputed data is a valid user
-### Param: user Table (Username string, Password string)
-### Returns : User if the login is successfull, false if unsucc
 def verifyLogin(user):
     if user == None : return 
     _username = user["Username"]
     _pwd = user["Password"]
 
-    for k,v in _users.items():  
+    for k,v in db.getUsers().items():  
         if _username == v.username and _pwd == v.password: #do we have a user with the specified name and pwd?            
             ui.successfullLogin(v)
-            return _users[k]
+            return db.getUsers()[k]
         
     print("<NETACNA LOZINKA ILI KORISNICKO IME>")
     return False  

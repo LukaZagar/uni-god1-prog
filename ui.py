@@ -1,5 +1,7 @@
+from Korisnik import Korisnik
+from Bibliotekar import Bibliotekar
 
-
+import db
 
 def showLogin():
     print("\n\nUlogovanje u sistem...")
@@ -20,8 +22,10 @@ def successfullLogin(userClass):
     print("\n=================================")
     print("====== USPESNO ULOGOVANI ========")
     print("=================================")
-    print("ID:           "+str(userClass.id))
+    print("ID:           "+str(userClass.accessLevel))
     print("Nalog:        "+userClass.username)
+    print("Ime:          "+userClass.fname)
+    print("Prezime:      "+userClass.lname)
     print("Vrsta naloga: "+userClass.AccessLevelToString())
     print("=================================\n")
 
@@ -36,6 +40,22 @@ def showUserMenu(user):
     print('Q.Izlaz iz sistema')
     return result
 
+def createNewUser():
+    accType = input("Unesite numerican modifikator pristupa")
+    accUname = input("Unesite korisnicko ime novog naloga")
+    if db.userExists(accUname):
+        print("KORISNIK SA IMENOM"+str(accUname)+" VEC POSTOJI, PROBAJTE OPET")
+        createNewUser()
+        return 
+    accFName = input("Unesite ime novog korisnickog naloga")
+    accLName = input("Unesite prezime novog korisnickog naloga")
+    accPwd = input("Unesite lozinku novog korisnickog naloga")
+
+    korisnik = Korisnik(accType,accUname,accFName,accLName,accPwd)
+    db.addUser(korisnik)
+
+    print("Uspesno uneti novi korisnik!")
+    return korisnik
 
 
 
@@ -69,9 +89,17 @@ _uiMenus = {
         },
         "modifyUser":{
             1:{
-                "text":"XD",
-                "onSelect": "mainMenu"
-            }
+                "text":"Unesi novog korisnika",
+                "onSelect": "modifyUser_CreateNew"
+            },
+            2:{
+                "text":"Modifikuj vec postojeceg korisnika",
+                "onSelect": "modifyUser_ModifyExisting"
+            },
+        },
+        "modifyUser_CreateNew":{
+            "function": createNewUser
+            
         }
     },
     2 : {
@@ -87,7 +115,13 @@ _uiMenus = {
 def printModularMenu(id):
     result = False
     acclvl = activeUser.GetAccessLevel()
-     
+    
+    try: # da li ima funkcija u ovom pod meniju koju treba da odma pozovemo / Korisnik izabrao operaciju u jednom od podmenija
+        _uiMenus[acclvl][id]["function"]()
+        printModularMenu("mainMenu")# zavrsili smo sa funkcijom, povratak na glavni meni
+    except KeyError:
+        pass
+
     for k,v in _uiMenus[acclvl][id].items():
         print("["+str(k)+"] "+v["text"])
 

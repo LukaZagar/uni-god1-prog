@@ -1,17 +1,22 @@
+import json
+
 
 class Korisnik:
     #Access levels
     #1.Bibliotekar
     # NILL .Korisnik
 
-    def __init__(self,id,username,fname,lname,password):
-        self.id = id
+    def __init__(self,accType,username,fname,lname,password):
+        self.accessLevel = accType
         self.username = username
         self.fname = fname
         self.lname = lname
         self.password = password
-        self.accessLevel = 0
     
+    def GetUserName(self):
+        return self.username
+    
+
     def SetAccessLevel(self,level):
         self.accessLevel = level
 
@@ -34,3 +39,5 @@ class Korisnik:
     def SetPassword(self,pwd):
         self.password = pwd
 
+    def ToJSON(self):# Vratiti json.dumps verziju sa time sto specifiramo parametar "default" i govorimo mu da koristi ugradjenu funkciju klase "__dict__"
+        return json.dumps(self, default=lambda o:o.__dict__, sort_keys=True, indent=4)
