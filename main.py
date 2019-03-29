@@ -2,6 +2,7 @@ import knjiga
 from Korisnik import Korisnik
 from Bibliotekar import Bibliotekar
 import ui
+
 _users = {}
 
 korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
@@ -36,14 +37,14 @@ def verifyLogin(user):
 exit = False
 while not exit: # continious ui display
     logingInUser = ui.showLogin() # {username,pwd}
-    user = verifyLogin(logingInUser)
-    if not user == False: # we loged in successfully, show the second menu
+    activeUser = verifyLogin(logingInUser)
+    if not activeUser == False: # we loged in successfully, show the second menu
         _exit = False
-        if user == None:
+        if activeUser == None:
             print("ODUSTALI STE OD PRIJAVE")
             _exit = True
         while not _exit:
-            _exit = ui.showUserMenu(user)
+            _exit = ui.showUserMenu(activeUser)
             if _exit == "Q" or "q":
                 _exit = True
         exit = True

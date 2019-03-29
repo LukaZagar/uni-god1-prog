@@ -1,4 +1,3 @@
-import ui
 
 class Korisnik:
     #Access levels
