@@ -1,5 +1,5 @@
 import json
-from Korisnik import Korisnik
+from korisnik import Korisnik
 from Bibliotekar import Bibliotekar
 
 import sys
@@ -16,13 +16,13 @@ def saveUsers():
     usersDir = fileDir+"/users.json"
    
     _saveDict = {}
-    for k,_user in _users:
+    for k,_user in _users.items():
         _saveDict[k] = _user.ToJSON()
 
     #try:
     
     with open(usersDir, 'w') as outfile:
-        json.dump(json.dumps(_users),outfile)
+        json.dump(json.dumps(_saveDict),outfile)
 
     # except:
     #     print("\nGreska prilikom cuvanja podataka, podatci NISU SACUVANI")

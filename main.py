@@ -3,7 +3,7 @@ import knjiga
 import ui
 import db
 
-from Korisnik import Korisnik
+from korisnik import Korisnik
 from Bibliotekar import Bibliotekar
 
 

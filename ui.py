@@ -1,4 +1,4 @@
-from Korisnik import Korisnik
+from korisnik import Korisnik
 from Bibliotekar import Bibliotekar
 
 import db
