@@ -1,6 +1,6 @@
 from classes.korisnik import Korisnik
 from classes.bibliotekar import Bibliotekar
-import libs.db
+import libs.db as db
 
 def showLogin():
     print("\n\nUlogovanje u sistem...")
@@ -57,7 +57,6 @@ def createNewUser():
     return korisnik
 
 
-
 _uiMenus = {
     1 : { #bibliotekar
         "mainMenu": {
@@ -98,7 +97,6 @@ _uiMenus = {
         },
         "modifyUser_CreateNew":{
             "function": createNewUser
-            
         }
     },
     2 : {
