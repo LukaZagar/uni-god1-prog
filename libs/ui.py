@@ -1,7 +1,6 @@
-from korisnik import Korisnik
-from Bibliotekar import Bibliotekar
-
-import db
+from classes.korisnik import Korisnik
+from classes.bibliotekar import Bibliotekar
+import libs.db
 
 def showLogin():
     print("\n\nUlogovanje u sistem...")

@@ -1,6 +1,6 @@
 import json
-from korisnik import Korisnik
-from Bibliotekar import Bibliotekar
+from classes.korisnik import Korisnik
+from classes.bibliotekar import Bibliotekar
 
 import sys
 import os

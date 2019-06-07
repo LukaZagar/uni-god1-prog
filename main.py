@@ -1,10 +1,10 @@
-import knjiga
+from classes import knjiga
 
-import ui
-import db
+from libs import ui
+from libs import db
 
-from korisnik import Korisnik
-from Bibliotekar import Bibliotekar
+from classes.korisnik import Korisnik
+from classes.bibliotekar import Bibliotekar
 
 
 def verifyLogin(user):
