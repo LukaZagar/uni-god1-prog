@@ -23,7 +23,7 @@ def saveUsers():
 
     #try:
     with open(usersDir, 'w') as outfile:
-        jsonFormat = json.dumps(_saveDict)
+        jsonFormat = json.dumps(_saveDict,sort_keys=True,indent=4)
         print(jsonFormat)
         outfile.write(jsonFormat)
         #json.dump(,outfile)

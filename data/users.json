@@ -1,1 +1,16 @@
-{"LukaZ": {"accessLevel": 1, "username": "LukaZ", "fname": "Luka", "lname": "Zagar", "password": "123"}, "Petar66": {"accessLevel": 1, "username": "Petar66", "fname": "Petar", "lname": "Petric", "password": "321"}}
+{
+    "LukaZ": {
+        "accessLevel": 1,
+        "fname": "Luka",
+        "lname": "Zagar",
+        "password": "123",
+        "username": "LukaZ"
+    },
+    "Petar66": {
+        "accessLevel": 1,
+        "fname": "Petar",
+        "lname": "Petric",
+        "password": "321",
+        "username": "Petar66"
+    }
+}
