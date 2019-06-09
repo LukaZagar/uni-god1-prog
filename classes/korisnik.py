@@ -40,4 +40,4 @@ class Korisnik:
         self.password = pwd
 
     def ToJSON(self):# Vratiti json.dumps verziju sa time sto specifiramo parametar "default" i govorimo mu da koristi ugradjenu funkciju klase "__dict__"
-        return json.dumps(self, default=lambda o:o.__dict__, sort_keys=True, indent=4)
+        return self.__dict__

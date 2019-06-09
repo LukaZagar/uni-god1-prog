@@ -7,25 +7,28 @@ import os
 
 _users = {}
 
+fileDir = os.path.dirname(os.path.abspath(__file__))
+_dataDir = fileDir[:-5]+"/data/" # odstrani /libs sa kraja
+
 def getUsers():
     return _users
 
 def saveUsers():
-    print("Cuvanje korisnika...")
-    fileDir = os.path.dirname(os.path.abspath(__file__))
-    usersDir = fileDir+"/users.json"
+    usersDir = _dataDir+"users.json"
    
+    print(f"Cuvanje korisnika u direktorijum {usersDir}")
     _saveDict = {}
-    for k,_user in _users.items():
-        _saveDict[k] = _user.ToJSON()
+    for _,_user in _users.items():
+        _saveDict[_user.GetUserName()] = _user.ToJSON()    # kljuc je bio pod '' navodnicima, a json to nepodrzava
 
     #try:
-    
     with open(usersDir, 'w') as outfile:
-        json.dump(json.dumps(_saveDict),outfile)
-
+        jsonFormat = json.dumps(_saveDict)
+        print(jsonFormat)
+        outfile.write(jsonFormat)
+        #json.dump(,outfile)
     # except:
-    #     print("\nGreska prilikom cuvanja podataka, podatci NISU SACUVANI")
+    #     print("\n[GRESKA] Greska prilikom cuvanja podataka, podatci NISU SACUVANI, Poruka: ")
     # finally:
     #     print("\nGotovo cuvanje korisnika")
 
@@ -37,7 +40,7 @@ def addUser(user):
     if not userExists(username):
         _users[username] = user
         #saveUsers()
-    
+
 korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
 bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
 
