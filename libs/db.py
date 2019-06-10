@@ -13,10 +13,18 @@ _dataDir = fileDir[:-5]+"/data/" # odstrani /libs sa kraja
 def getUsers():
     return _users
 
-def saveUsers():
+def saveUsers(defaultSave=False):
     usersDir = _dataDir+"users.json"
    
     print(f"Cuvanje korisnika u direktorijum {usersDir}")
+
+    if defaultSave:
+        korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
+        bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
+
+        addUser(korisnik1)
+        addUser(bibliotekar1)
+
     _saveDict = {}
     for _,_user in _users.items():
         _saveDict[_user.GetUserName()] = _user.ToJSON()    # kljuc je bio pod '' navodnicima, a json to nepodrzava
@@ -32,6 +40,20 @@ def saveUsers():
     # finally:
     #     print("\nGotovo cuvanje korisnika")
 
+
+def loadUsers():
+    usersDir = _dataDir+"users.json"
+    if os.path.isfile(usersDir):
+        print("Fajl sa korisnicima postoji, ucitavanje...")
+        jsonFile = open(usersDir)
+        jsonStr = jsonFile.read()
+        jsonData = json.loads(jsonStr)
+        _users = jsonData
+        print("Gotovo ucitavanje korisnika!") 
+    else:
+        print("Fajl sa korisnicima ne postoji ili ima gesku, cuvanje default korisnika...")
+        saveUsers(defaultSave=True)
+
 def userExists(uname):
     return uname in _users
 
@@ -41,14 +63,14 @@ def addUser(user):
         _users[username] = user
         #saveUsers()
 
-korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
-bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
+# korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
+# bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
 
 
-addUser(korisnik1)
-addUser(bibliotekar1)
+# addUser(korisnik1)
+# addUser(bibliotekar1)
 
-saveUsers()
+# saveUsers()
 
 
 # with open('data.json', 'w') as outfile:
