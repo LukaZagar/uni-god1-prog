@@ -1,6 +1,7 @@
 {
     "LukaZ": {
-        "accessLevel": 1,
+        "accessLevel": 2,
+        "cardNumber": 0,
         "fname": "Luka",
         "lname": "Zagar",
         "password": "123",
@@ -8,6 +9,7 @@
     },
     "Petar66": {
         "accessLevel": 1,
+        "cardNumber": 1,
         "fname": "Petar",
         "lname": "Petric",
         "password": "321",

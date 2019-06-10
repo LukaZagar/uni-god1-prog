@@ -6,17 +6,17 @@ class Korisnik:
     #1.Bibliotekar
     # NILL .Korisnik
 
-    def __init__(self,accType,username,fname,lname,password):
-        self.accessLevel = accType
+    def __init__(self,username,fname,lname,password,cardNumber,accType=2):
         self.username = username
         self.fname = fname
         self.lname = lname
         self.password = password
+        self.cardNumber = cardNumber
+        self.accessLevel = accType or 2
     
     def GetUserName(self):
         return self.username
     
-
     def SetAccessLevel(self,level):
         self.accessLevel = level
 

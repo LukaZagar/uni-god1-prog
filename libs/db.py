@@ -19,8 +19,21 @@ def saveUsers(defaultSave=False):
     print(f"Cuvanje korisnika u direktorijum {usersDir}")
 
     if defaultSave:
-        korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
-        bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
+        korisnik1 = Korisnik(
+            username="LukaZ",
+            fname="Luka",
+            lname="Zagar",
+            password="123",
+            cardNumber=0
+            )
+        bibliotekar1 = Bibliotekar(
+            id=2,
+            username="Petar66",
+            fname="Petar",
+            lname="Petric",
+            password="321",
+            cardNumber=1
+            )
 
         addUser(korisnik1)
         addUser(bibliotekar1)
@@ -32,7 +45,6 @@ def saveUsers(defaultSave=False):
     #try:
     with open(usersDir, 'w') as outfile:
         jsonFormat = json.dumps(_saveDict,sort_keys=True,indent=4)
-        print(jsonFormat)
         outfile.write(jsonFormat)
         #json.dump(,outfile)
     # except:
@@ -43,13 +55,18 @@ def saveUsers(defaultSave=False):
 
 def loadUsers():
     usersDir = _dataDir+"users.json"
-    if os.path.isfile(usersDir):
-        print("Fajl sa korisnicima postoji, ucitavanje...")
-        jsonFile = open(usersDir)
-        jsonStr = jsonFile.read()
-        jsonData = json.loads(jsonStr)
-        _users = jsonData
-        print("Gotovo ucitavanje korisnika!") 
+    if os.path.isfile(usersDir) and os.stat(usersDir).st_size != 0: # da li postoji fajl i da nije prazan
+        try:
+            print("Fajl sa korisnicima postoji, ucitavanje...")
+            jsonFile = open(usersDir)
+            jsonStr = jsonFile.read()
+            jsonData = json.loads(jsonStr)
+            global _users
+            _users = jsonData
+        except:
+            print("\n[GRESKA] Greska prilikom ucitavanja podataka")
+        finally:
+            print("Gotovo ucitavanje korisnika!") 
     else:
         print("Fajl sa korisnicima ne postoji ili ima gesku, cuvanje default korisnika...")
         saveUsers(defaultSave=True)

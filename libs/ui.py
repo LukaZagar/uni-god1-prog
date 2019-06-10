@@ -22,10 +22,10 @@ def successfullLogin(userClass):
     print("====== USPESNO ULOGOVANI ========")
     print("=================================")
     print("ID:           "+str(userClass.accessLevel))
-    print("Nalog:        "+userClass.username)
-    print("Ime:          "+userClass.fname)
-    print("Prezime:      "+userClass.lname)
-    print("Vrsta naloga: "+userClass.AccessLevelToString())
+    print("Nalog:        "+str(userClass.username))
+    print("Ime:          "+str(userClass.fname))
+    print("Prezime:      "+str(userClass.lname))
+    print("Vrsta naloga: "+str(userClass.AccessLevelToString()))
     print("=================================\n")
 
 def showUserMenu(user):
@@ -99,12 +99,21 @@ _uiMenus = {
             "function": createNewUser
         }
     },
-    2 : {
+    2 : { #Korisnik
         "mainMenu": {
-            1: "Pregled zaduzenih knjiga.",
-            2: "Pretrazivanje knjiga.",
-            3: "Izmena podataka korisnickog naloga.",
-        }
+            1:{
+                "text":"Pregled zaduzenih knjiga.",
+                "onSelect":"",
+            },
+            2:{
+                "text": "Pretrazivanje knjiga.",
+                "onSelect":"",
+            },
+            3:{
+                "text": "Izmena podataka korisnickog naloga.",
+                "onSelect":"",
+            },
+        },
     },
 }
 
@@ -116,15 +125,16 @@ def printModularMenu(id):
     try: # da li ima funkcija u ovom pod meniju koju treba da odma pozovemo / Korisnik izabrao operaciju u jednom od podmenija
         _uiMenus[acclvl][id]["function"]()
         printModularMenu("mainMenu")# zavrsili smo sa funkcijom, povratak na glavni meni
-    except KeyError:
-        pass
+    except (KeyError,TypeError) as err:
+        print(str(err))
+        
 
     for k,v in _uiMenus[acclvl][id].items():
         print("["+str(k)+"] "+v["text"])
 
     result = input("Unesite broj zeljene akcije:: ")
 
-    try:
+    try: #
         printModularMenu(_uiMenus[acclvl][id][int(result)]["onSelect"]) # prikazi sledeci meni
     except KeyError: # uneta pogresna ili nepostojeca vrednost
         print("Ne postoji opcija "+str(result)+" u meniju "+str(k))
