@@ -14,5 +14,13 @@
         "lname": "Petric",
         "password": "321",
         "username": "Petar66"
+    },
+    "Petar67": {
+        "accessLevel": "1",
+        "cardNumber": "1",
+        "fname": "sdads",
+        "lname": "das",
+        "password": "111",
+        "username": "Petar67"
     }
 }

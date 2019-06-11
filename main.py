@@ -16,16 +16,9 @@ def verifyLogin(user):
     users = db.getUsers()
 
     for k,v in users.items():  
-        if _username == k and _pwd == v["password"]: #do we have a user with the specified name and pwd?            
-            userData = users[k]
-            loggedInUser = Korisnik(
-                username=userData["username"],
-                fname=userData["fname"],
-                lname=userData["lname"],
-                password=userData["password"],
-                cardNumber=userData["cardNumber"],
-                accType=userData["accessLevel"]
-                ) #users[k]
+        if _username == k and _pwd == v.password: #do we have a user with the specified name and pwd?            
+            #userData = users[k]
+            loggedInUser = v
             ui.successfullLogin(loggedInUser)
             return loggedInUser
             

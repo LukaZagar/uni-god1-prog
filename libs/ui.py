@@ -40,20 +40,27 @@ def showUserMenu(user):
     return result
 
 def createNewUser():
-    accType = input("Unesite numerican modifikator pristupa")
-    accUname = input("Unesite korisnicko ime novog naloga")
+    accType = input("Unesite numerican modifikator pristupa naloga (1= Korisnik 2=Bibliotekar):: ")
+    accUname = input("Unesite korisnicko ime novog naloga:: ")
     if db.userExists(accUname):
         print("KORISNIK SA IMENOM"+str(accUname)+" VEC POSTOJI, PROBAJTE OPET")
         createNewUser()
         return 
-    accFName = input("Unesite ime novog korisnickog naloga")
-    accLName = input("Unesite prezime novog korisnickog naloga")
-    accPwd = input("Unesite lozinku novog korisnickog naloga")
-
-    korisnik = Korisnik(accType,accUname,accFName,accLName,accPwd)
+    accFName = input("Unesite ime novog korisnickog naloga:: ")
+    accLName = input("Unesite prezime novog korisnickog naloga:: ")
+    accPwd = input("Unesite lozinku novog korisnickog naloga:: ")
+    accCardNum = input("Unesite jedisntveni broj clanske karte korisnika:: ")
+    korisnik = Korisnik(
+        username = accUname,
+        fname = accFName,
+        lname = accLName,
+        password = accPwd,
+        cardNumber = accCardNum,
+        accType=accType
+        )
     db.addUser(korisnik)
-
     print("Uspesno uneti novi korisnik!")
+    db.saveUsers()
     return korisnik
 
 
