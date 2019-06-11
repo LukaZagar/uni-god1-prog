@@ -1,11 +1,13 @@
 import json
 from classes.korisnik import Korisnik
 from classes.bibliotekar import Bibliotekar
+from classes.knjiga import Knjiga
 
 import sys
 import os
 
 _users = {}
+_books = {}
 
 fileDir = os.path.dirname(os.path.abspath(__file__))
 _dataDir = fileDir[:-5]+"/data/" # odstrani /libs sa kraja
@@ -90,6 +92,7 @@ def loadUsers():
     else:
         print("Fajl sa korisnicima ne postoji ili ima gesku, cuvanje default korisnika...")
         saveUsers(defaultSave=True)
+        loadUsers()
 
 def userExists(uname):
     return uname in _users
@@ -106,9 +109,7 @@ def isUserCardNumberUnique(userClass):
     #return True
 
 def isUserDataUnique(userArg):
-    return (
-        isUserUsernameUnique(userArg) and isUserCardNumberUnique(userArg)
-        )
+    return (isUserUsernameUnique(userArg) and isUserCardNumberUnique(userArg))
 
 def addUser(user):
     username = user.GetUserName()
@@ -121,6 +122,68 @@ def addUser(user):
     # if not userExists(username):
     #     _users[username] = user
     #     saveUsers()
+
+def isBookDataUnique(bookClass):
+    return bookClass.getID() in _books
+
+def addBook(bookClass):
+    if not isBookDataUnique(bookClass):
+        global _books
+        _books[bookClass.getID()] = bookClass
+        return True
+    else:
+        return False,"Knjiga sa ovim ID vec postoji!"
+
+def saveBooks(defaultSave=False):
+    bookDir = _dataDir+"books.json"
+    if defaultSave:
+        book1 = Knjiga(
+            id=0,
+            autor="Mike Litoris",
+            godIzdavanja = "1/1/1970",
+            brojPrimeraka = 23,
+            brojSlobodnihPrimeraka = 12
+        )
+        addBook(book1)
+
+    _saveDict = {}
+    for _,_book in _books.items():
+        _saveDict[_book.getID()] = _book.toJSON()    # kljuc je bio pod '' navodnicima, a json to nepodrzava
+
+    with open(bookDir, 'w') as outfile:
+        jsonFormat = json.dumps(_saveDict,sort_keys=True,indent=4)
+        outfile.write(jsonFormat)
+        print("Uspesno sacuvani podatci knjiga!")
+
+def loadBooks():
+    bookDir = _dataDir+"books.json"
+    if os.path.isfile(bookDir) and os.stat(bookDir).st_size != 0: # da li postoji fajl i da nije prazan
+        try:
+            print("Fajl sa knjigama postoji, ucitavanje...")
+            jsonFile = open(bookDir)
+            jsonStr = jsonFile.read()
+            jsonData = json.loads(jsonStr)
+            global _users
+
+            for k,v in jsonData.items():
+                book = Knjiga(
+                    id = v["id"],
+                    autor = v["Autor"],
+                    godIzdavanja = v["GodIzdanja"],
+                    brojPrimeraka = v["BrojPrimeraka"],
+                    brojSlobodnihPrimeraka = v["BrojSlobodnihPrimeraka"]
+                    )
+                _books[k] = book
+        except:
+            print("\n[GRESKA] Greska prilikom ucitavanja podataka")
+        finally:
+            print("Gotovo ucitavanje knjiga!")
+            print(_books) 
+    else:
+        print("Fajl sa knjigama ne postoji ili ima gesku, cuvanje default knjiga...")
+        saveBooks(defaultSave=True)
+        loadBooks()
+
 
 # korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
 # bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")

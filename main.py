@@ -7,6 +7,7 @@ from classes.korisnik import Korisnik
 from classes.bibliotekar import Bibliotekar
 
 db.loadUsers()
+db.loadBooks()
 
 def verifyLogin(user):
     if user == None : return 

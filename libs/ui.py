@@ -1,5 +1,6 @@
 from classes.korisnik import Korisnik
 from classes.bibliotekar import Bibliotekar
+from classes.knjiga import Knjiga
 import libs.db as db
 
 def showLogin():
@@ -69,13 +70,35 @@ def createNewUser():
         print(f"Greska prilikom dodavanja korisnika, {errorMsg}")
         return False  
 
+def createNewBook():
+    bookID = input("Unesite ID knjige:: ")
+    bookAuthor = input("Unesite autora knjige:: ")
+    bookReleaseDate = input("Unesite datum izdanja knjige:: ")
+    bookCount = input("Unesite ukupan broj knjiga:: ")
+    bookCountAvailable = input("Unesite broj slobodnih knjiga:: ")
+
+    book = Knjiga(
+        id=bookID,
+        autor=bookAuthor,
+        godIzdavanja=bookReleaseDate,
+        brojPrimeraka=bookCount,
+        brojSlobodnihPrimeraka=bookCountAvailable
+    )
+    addBookRes,errorMsg = db.addBook(book)
+    if addBookRes:
+        print("Uspesno dodata knjiga!")
+        db.saveBooks()
+        return book
+    else:
+        print(f"Greska prilikom dodavanja knjige, {errorMsg}")
+        return False
 
 _uiMenus = {
     1 : { #bibliotekar
         "mainMenu": {
             1: {
                 "text":"Unos i izmena podataka o Knjigama",
-                "onSelect": "modifyUser"
+                "onSelect": "modifyBook"
             },
             2:{
                 "text":"Unos podataka za Bibliotekara i Korisnika",
@@ -96,6 +119,12 @@ _uiMenus = {
             6:{
                 "text":"Brisanje Korisnika",
                 "onSelect": "modifyUser"
+            }
+        },
+        "modifyBook":{
+            1:{
+                "text":"Unos nove knjige",
+                "function":createNewBook
             }
         },
         "modifyUser":{

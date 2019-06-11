@@ -7,3 +7,9 @@ class Knjiga:
         self.BrojPrimeraka = brojPrimeraka
         self.BrojSlobodnihPrimeraka = brojSlobodnihPrimeraka
     
+    def getID(self):
+        return self.id
+    
+    def toJSON(self):
+        return self.__dict__
+        
