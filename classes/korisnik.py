@@ -14,6 +14,9 @@ class Korisnik:
         self.cardNumber = cardNumber
         self.accessLevel = accType or 2
     
+    def GetCardNumber(self):
+        return self.cardNumber
+
     def GetUserName(self):
         return self.username
     

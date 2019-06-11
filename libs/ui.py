@@ -58,10 +58,16 @@ def createNewUser():
         cardNumber = accCardNum,
         accType=accType
         )
-    db.addUser(korisnik)
-    print("Uspesno uneti novi korisnik!")
-    db.saveUsers()
-    return korisnik
+    
+    addUserRes,errorMsg = db.addUser(korisnik)
+
+    if addUserRes:
+        print("Uspesno uneti novi korisnik!")
+        db.saveUsers()
+        return korisnik
+    else:
+        print(f"Greska prilikom dodavanja korisnika, {errorMsg}")
+        return False  
 
 
 _uiMenus = {

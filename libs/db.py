@@ -94,11 +94,33 @@ def loadUsers():
 def userExists(uname):
     return uname in _users
 
+def isUserUsernameUnique(userClass):
+    return not userExists(userClass.username)
+
+def isUserCardNumberUnique(userClass):
+    cardToCheck = userClass.GetCardNumber()
+    for _,v in _users.items():
+        if cardToCheck == v.GetCardNumber():
+            return False
+
+    #return True
+
+def isUserDataUnique(userArg):
+    return (
+        isUserUsernameUnique(userArg) and isUserCardNumberUnique(userArg)
+        )
+
 def addUser(user):
     username = user.GetUserName()
-    if not userExists(username):
+    if isUserDataUnique(user):
         _users[username] = user
-        #saveUsers()
+        return True
+    else:
+        return False,"Korisnik sa tim korisnickim imenom/brojem clanske karte vec postoji!"
+        
+    # if not userExists(username):
+    #     _users[username] = user
+    #     saveUsers()
 
 # korisnik1 = Korisnik(1,"LukaZ","Luka","Zagar","123")
 # bibliotekar1 = Bibliotekar(2,"Petar66","Petar","Petric","321")
