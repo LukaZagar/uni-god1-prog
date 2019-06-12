@@ -70,13 +70,13 @@ def createNewUser():
         print(f"Greska prilikom dodavanja korisnika, {errorMsg}")
         return False  
 
-def createNewBook():
-    bookID = input("Unesite ID knjige:: ")
+def createNewBook(bookID=False):
+    bookID = input("Unesite ID knjige:: ") if not bookID else bookID #Ukoliko smo vec prosledili ID parametar, nemoj pitati za input
     bookAuthor = input("Unesite autora knjige:: ")
     bookReleaseDate = input("Unesite datum izdanja knjige:: ")
     bookCount = input("Unesite ukupan broj knjiga:: ")
     bookCountAvailable = input("Unesite broj slobodnih knjiga:: ")
-
+    
     book = Knjiga(
         id=bookID,
         autor=bookAuthor,
@@ -84,6 +84,10 @@ def createNewBook():
         brojPrimeraka=bookCount,
         brojSlobodnihPrimeraka=bookCountAvailable
     )
+
+    #db._books[bookID] = None # ukoliko menjamo vec postojecu knjigu, moramo izbrisati vec postojecu vrednost inace ce vratiti gresku ne jedistvenosti ID parametra
+    db._books.pop(bookID,None)
+
     addBookRes,errorMsg = db.addBook(book)
     if addBookRes:
         print("Uspesno dodata knjiga!")
@@ -92,6 +96,16 @@ def createNewBook():
     else:
         print(f"Greska prilikom dodavanja knjige, {errorMsg}")
         return False
+
+
+def editBook():
+    
+    print("U bazi su trenutno sledece knjige: ")
+    for k,v in db._books.items():
+        jsonData = v.toJSON()
+        print(f"\t[{k}]:\n\t\t {jsonData}")
+    change = input("Izaberite redni broj knjige koje podatke zelite da izmenite:: ")
+    createNewBook(change) 
 
 _uiMenus = {
     1 : { #bibliotekar
@@ -125,6 +139,10 @@ _uiMenus = {
             1:{
                 "text":"Unos nove knjige",
                 "function":createNewBook
+            },
+            2:{
+                "text":"Izmena podataka vec unete knjige",
+                "function":editBook
             }
         },
         "modifyUser":{
@@ -164,11 +182,11 @@ def printModularMenu(id):
     result = False
     acclvl = activeUser.GetAccessLevel()
     
-    try: # da li ima funkcija u ovom pod meniju koju treba da odma pozovemo / Korisnik izabrao operaciju u jednom od podmenija
-        _uiMenus[acclvl][id]["function"]()
-        printModularMenu("mainMenu")# zavrsili smo sa funkcijom, povratak na glavni meni
-    except (KeyError,TypeError) as err:
-        print(str(err))
+    # try: # da li ima funkcija u ovom pod meniju koju treba da odma pozovemo / Korisnik izabrao operaciju u jednom od podmenija
+    #     _uiMenus[acclvl][id]["function"]()
+    #     printModularMenu("mainMenu")# zavrsili smo sa funkcijom, povratak na glavni meni
+    # except (KeyError,TypeError) as err:
+    #     print(str(err))
         
 
     for k,v in _uiMenus[acclvl][id].items():
@@ -177,7 +195,18 @@ def printModularMenu(id):
     result = input("Unesite broj zeljene akcije:: ")
 
     try: #
-        printModularMenu(_uiMenus[acclvl][id][int(result)]["onSelect"]) # prikazi sledeci meni
+        _menu = _uiMenus[acclvl][id][int(result)]
+        _onSelect = _menu["onSelect"] if "onSelect" in _menu else None #modifyBook
+        _function = _menu["function"] if "function" in _menu else None
+
+        onSelectPrint = _onSelect != None and _onSelect != ""
+        onSelectFunc = _function != None and _function != ""
+
+        if onSelectPrint: printModularMenu(_onSelect) # prikazi sledeci meni ukoliko ima onSelect polje
+        if onSelectFunc: _menu["function"]() # ako dodjemo do ovde, znaci da nema onselect vec ima samo funkcija
+
+        
+        printModularMenu("mainMenu") #gotovi sa funkcijom, to je jedini nacin da cemo doci do ove linije, znaci vrati na pocetni meni
     except KeyError: # uneta pogresna ili nepostojeca vrednost
         print("Ne postoji opcija "+str(result)+" u meniju "+str(k))
         printModularMenu(id) # prikazi mu isti meni opet

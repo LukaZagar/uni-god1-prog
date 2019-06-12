@@ -5,5 +5,12 @@
         "BrojSlobodnihPrimeraka": 12,
         "GodIzdanja": "1/1/1970",
         "id": 0
+    },
+    "1": {
+        "Autor": "My name ugh Jeff",
+        "BrojPrimeraka": 0,
+        "BrojSlobodnihPrimeraka": 3,
+        "GodIzdanja": "15/3/2019",
+        "id": 1
     }
 }
