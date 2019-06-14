@@ -11,16 +11,18 @@
         "accessLevel": 1,
         "cardNumber": 1,
         "fname": "Petar",
+        "id": 2,
         "lname": "Petric",
         "password": "321",
         "username": "Petar66"
     },
-    "Petar67": {
+    "dasd": {
         "accessLevel": 1,
         "cardNumber": 2,
-        "fname": "sdads",
-        "lname": "das",
-        "password": "111",
-        "username": "Petar67"
+        "fname": "asd",
+        "id": 1,
+        "lname": "asd",
+        "password": "aaa",
+        "username": "dasd"
     }
 }

@@ -42,5 +42,5 @@ class Korisnik:
     def SetPassword(self,pwd):
         self.password = pwd
 
-    def ToJSON(self):# Vratiti json.dumps verziju sa time sto specifiramo parametar "default" i govorimo mu da koristi ugradjenu funkciju klase "__dict__"
+    def ToJSON(self):
         return self.__dict__

@@ -41,7 +41,14 @@ def showUserMenu(user):
     return result
 
 def createNewUser(providedUser=False):
+    accID = None
     accType = input("Unesite numerican modifikator pristupa naloga (2= Korisnik 1=Bibliotekar):: ") if not providedUser else providedUser.GetAccessLevel()
+
+    if int(accType) == 1: # ukoliko je bibliotekar, trazi id
+        accID = int(input("Unesite ID za bibliotekara:: "))
+        if db.librarianIDExists(accID):
+            print("Bibliotekar sa datim ID-jem vec postoji!\n")
+            createNewUser(providedUser=providedUser)
     accUname = input("Unesite korisnicko ime novog naloga:: ")
     if db.userExists(accUname):
         print("KORISNIK SA IMENOM"+str(accUname)+" VEC POSTOJI, PROBAJTE OPET")
@@ -51,30 +58,45 @@ def createNewUser(providedUser=False):
     accLName = input("Unesite prezime novog korisnickog naloga:: ")
     accPwd = input("Unesite lozinku novog korisnickog naloga:: ")
     accCardNum = input("Unesite jedisntveni broj clanske karte korisnika:: ")
-    if not db.isUserCardNumberUnique(providedUser):
+    
+
+    nalog = None
+    if int(accType) == 1:
+        nalog = Bibliotekar(
+            id=int(accID),
+            username = accUname,
+            fname = accFName,
+            lname = accLName,
+            password = accPwd,
+            cardNumber = int(accCardNum),
+            accType=int(accType)
+        )
+    elif int(accType) ==2:
+        nalog = Korisnik(
+            username = accUname,
+            fname = accFName,
+            lname = accLName,
+            password = accPwd,
+            cardNumber = int(accCardNum),
+            accType=int(accType)
+        )
+    
+    if not db.isUserCardNumberUnique(nalog):
         print("Morate uneti jednistveni broj clanske karte!")
         createNewUser(providedUser=providedUser)
-        return
-
-    korisnik = Korisnik(
-        username = accUname,
-        fname = accFName,
-        lname = accLName,
-        password = accPwd,
-        cardNumber = int(accCardNum),
-        accType=int(accType)
-        )
+        
+    
     if providedUser != False:
         db._users.pop(providedUser.GetUserName(),None)
 
-    addUserRes,errorMsg = db.addUser(korisnik)
+    addUserRes,errorMsg = db.addUser(nalog)
 
     if addUserRes:
-        print("Uspesno uneti novi korisnik!")
+        print("Uspesno uneti novi nalog!")
         db.saveUsers()
-        return korisnik
+        return nalog
     else:
-        print(f"Greska prilikom dodavanja korisnika, {errorMsg}")
+        print(f"Greska prilikom dodavanja naloga, {errorMsg}")
         return False  
 
 def createNewBook(bookID=False):
@@ -203,7 +225,10 @@ def printModularMenu(id):
             print("["+str(k)+"] "+v["text"])
 
     result = input("Unesite broj zeljene akcije:: ")
-
+    
+    if str.lower(result) == "q":
+        return 
+    
     try: #
         _menu = _uiMenus[acclvl][id][int(result)]
         _onSelect = _menu["onSelect"] if "onSelect" in _menu else None #modifyBook
@@ -213,8 +238,7 @@ def printModularMenu(id):
         onSelectFunc = _function != None and _function != ""
 
         if onSelectPrint: printModularMenu(_onSelect) # prikazi sledeci meni ukoliko ima onSelect polje
-        if onSelectFunc: 
-            _menu["function"]() # ako dodjemo do ovde, znaci da nema onselect vec ima samo funkcija
+        if onSelectFunc: _menu["function"]() # ako dodjemo do ovde, znaci da nema onselect vec ima samo funkcija
             
         
         printModularMenu("mainMenu") #gotovi sa funkcijom, to je jedini nacin da cemo doci do ove linije, znaci vrati na pocetni meni

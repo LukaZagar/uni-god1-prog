@@ -34,7 +34,6 @@ def saveUsers(defaultSave=False):
     usersDir = _dataDir+"users.json"
    
     print(f"Cuvanje korisnika u direktorijum {usersDir}")
-
     if defaultSave:
         korisnik1 = Korisnik(
             username="LukaZ",
@@ -44,7 +43,7 @@ def saveUsers(defaultSave=False):
             cardNumber=0
             )
         bibliotekar1 = Bibliotekar(
-            id=2,
+            id=0,
             username="Petar66",
             fname="Petar",
             lname="Petric",
@@ -86,13 +85,25 @@ def loadUsers():
             global _users
 
             for k,v in jsonData.items():
-                korisnik = Korisnik(
-                    username = v["username"],
-                    fname = v["fname"],
-                    lname = v["lname"],
-                    password = v["password"],
-                    cardNumber = v["cardNumber"],
-                    accType=v["accessLevel"]
+                korisnik = None
+                if v["accessLevel"] == 1:
+                    korisnik = Bibliotekar(
+                        id=v["id"],
+                        username = v["username"],
+                        fname = v["fname"],
+                        lname = v["lname"],
+                        password = v["password"],
+                        cardNumber = v["cardNumber"],
+                        accType=v["accessLevel"]
+                    )
+                else:
+                    korisnik = Korisnik(
+                        username = v["username"],
+                        fname = v["fname"],
+                        lname = v["lname"],
+                        password = v["password"],
+                        cardNumber = v["cardNumber"],
+                        accType=v["accessLevel"]
                     )
                 _users[k] = korisnik
         except:
@@ -122,6 +133,14 @@ def isUserCardNumberUnique(userClass):
             return False
 
     return True
+
+def librarianIDExists(accID):
+    for k,v in _users.items():
+        loopAccLevel= v.GetAccessLevel()
+        if loopAccLevel == 1 and v.getID() == accID:
+            return True
+            
+    return False
 
 def isUserDataUnique(userArg):
     return (isUserUsernameUnique(userArg) and isUserCardNumberUnique(userArg))
