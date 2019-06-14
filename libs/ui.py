@@ -138,6 +138,42 @@ def modifyLibrarian():
     _newUser = createNewUser(db.getActiveUser())
     return _newUser
 
+def searchUsers(searchType):
+    results = []
+    counter = 0
+    if searchType == "cardNum":
+        cardToSearch = int(input("Unesite broj karte koji zelite da pretrazite:: "))
+        for k,v in db.getUsers().items():
+            if v.GetCardNumber() == cardToSearch:
+                results.insert(counter,v)
+                counter+=1
+    if searchType == "userName":
+        unameToSearch = input("Unesite ime korisnickog naloga za pretragu:: ")
+        for k,v in db.getUsers().items():
+            if unameToSearch in v.GetFirstName():
+                results.insert(counter,v)
+                counter+=1
+    if searchType == "lastName":
+        lnameToSearch = input("Unesite prezime korisnickog naloga za pretragu:: ")
+        for k,v in db.getUsers().items():
+            if lnameToSearch in v.GetLastName():
+                results.insert(counter,v)
+                counter+=1
+    return results
+
+def printUsersSearch(res):
+    print("Rezultat pretrage korisnika:")
+    for pos in range(len(res)):
+        _currUser = res[pos]
+        print(f"\t\t[{pos}]: {_currUser.ToJSON()}")
+    selectedUser = input("Izaberite korisnika kojeg zelite da zaduzite/razduzite:: ")    
+    _user = res[int(selectedUser)]
+    whatToDo =int(input("Zelite da\n\t1.Zaduzite\n\t2.Razduzite"))
+    if whatToDo ==1:
+        pass
+    else:
+        pass
+
 _uiMenus = {
     1 : { #bibliotekar
         "mainMenu": {
@@ -155,7 +191,7 @@ _uiMenus = {
             },
             4:{
                 "text":"Zaduživanje i razduživanje Korisnika",
-                "onSelect": "modifyUser"
+                "onSelect": "userBookManagment"
             }, 
             5:{
                 "text":"Rashodovanje knjiga",
@@ -164,6 +200,30 @@ _uiMenus = {
             6:{
                 "text":"Brisanje Korisnika",
                 "onSelect": "modifyUser"
+            }
+        },
+        "searchUserMethod":{
+            1:{
+                "text":"Pretraga putem broja clanske karte",
+                "function":lambda:printUsersSearch(searchUsers("cardNum")) #from functools import partial ali mrsko mi se sa time petljati
+            },
+            2:{
+                "text":"Pretraga putem imena",
+                "function":lambda:printUsersSearch(searchUsers("userName"))
+            },
+            3:{
+                "text":"Pretraga putem prezimena",
+                "function":lambda:printUsersSearch(searchUsers("lastName"))
+            },
+        },
+        "userBookManagment":{
+            1:{
+                "text":"Zaduzi korisnika",
+                "onSelect":"searchUserMethod"
+            },
+            2:{
+                "text":"Razduzi korisnika",
+                "onSelect":"searchUserMethod"
             }
         },
         "modifyBook":{

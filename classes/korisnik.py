@@ -20,6 +20,12 @@ class Korisnik:
     def GetUserName(self):
         return self.username
     
+    def GetFirstName(self):
+        return self.fname
+    
+    def GetLastName(self):
+        return self.fname
+    
     def SetAccessLevel(self,level):
         self.accessLevel = level
 
