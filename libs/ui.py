@@ -40,26 +40,33 @@ def showUserMenu(user):
     print('Q.Izlaz iz sistema')
     return result
 
-def createNewUser():
-    accType = input("Unesite numerican modifikator pristupa naloga (1= Korisnik 2=Bibliotekar):: ")
+def createNewUser(providedUser=False):
+    accType = input("Unesite numerican modifikator pristupa naloga (2= Korisnik 1=Bibliotekar):: ") if not providedUser else providedUser.GetAccessLevel()
     accUname = input("Unesite korisnicko ime novog naloga:: ")
     if db.userExists(accUname):
         print("KORISNIK SA IMENOM"+str(accUname)+" VEC POSTOJI, PROBAJTE OPET")
-        createNewUser()
+        createNewUser(providedUser=providedUser)
         return 
     accFName = input("Unesite ime novog korisnickog naloga:: ")
     accLName = input("Unesite prezime novog korisnickog naloga:: ")
     accPwd = input("Unesite lozinku novog korisnickog naloga:: ")
     accCardNum = input("Unesite jedisntveni broj clanske karte korisnika:: ")
+    if not db.isUserCardNumberUnique(providedUser):
+        print("Morate uneti jednistveni broj clanske karte!")
+        createNewUser(providedUser=providedUser)
+        return
+
     korisnik = Korisnik(
         username = accUname,
         fname = accFName,
         lname = accLName,
         password = accPwd,
-        cardNumber = accCardNum,
-        accType=accType
+        cardNumber = int(accCardNum),
+        accType=int(accType)
         )
-    
+    if providedUser != False:
+        db._users.pop(providedUser.GetUserName(),None)
+
     addUserRes,errorMsg = db.addUser(korisnik)
 
     if addUserRes:
@@ -97,15 +104,17 @@ def createNewBook(bookID=False):
         print(f"Greska prilikom dodavanja knjige, {errorMsg}")
         return False
 
-
 def editBook():
-    
     print("U bazi su trenutno sledece knjige: ")
     for k,v in db._books.items():
         jsonData = v.toJSON()
         print(f"\t[{k}]:\n\t\t {jsonData}")
     change = input("Izaberite redni broj knjige koje podatke zelite da izmenite:: ")
     createNewBook(change) 
+
+def modifyLibrarian():
+    _newUser = createNewUser(db.getActiveUser())
+    return _newUser
 
 _uiMenus = {
     1 : { #bibliotekar
@@ -148,16 +157,14 @@ _uiMenus = {
         "modifyUser":{
             1:{
                 "text":"Unesi novog korisnika",
-                "onSelect": "modifyUser_CreateNew"
+                "function": createNewUser
             },
             2:{
-                "text":"Modifikuj vec postojeceg korisnika",
-                "onSelect": "modifyUser_ModifyExisting"
+                "text":"Modifikuj trenutno prijavnjenog Bibliotekara",
+                "function": modifyLibrarian
             },
-        },
-        "modifyUser_CreateNew":{
-            "function": createNewUser
         }
+
     },
     2 : { #Korisnik
         "mainMenu": {
@@ -190,7 +197,10 @@ def printModularMenu(id):
         
 
     for k,v in _uiMenus[acclvl][id].items():
-        print("["+str(k)+"] "+v["text"])
+        if k == "function": 
+            _uiMenus[acclvl][id]["function"]()
+        if "text" in v:
+            print("["+str(k)+"] "+v["text"])
 
     result = input("Unesite broj zeljene akcije:: ")
 
@@ -203,8 +213,9 @@ def printModularMenu(id):
         onSelectFunc = _function != None and _function != ""
 
         if onSelectPrint: printModularMenu(_onSelect) # prikazi sledeci meni ukoliko ima onSelect polje
-        if onSelectFunc: _menu["function"]() # ako dodjemo do ovde, znaci da nema onselect vec ima samo funkcija
-
+        if onSelectFunc: 
+            _menu["function"]() # ako dodjemo do ovde, znaci da nema onselect vec ima samo funkcija
+            
         
         printModularMenu("mainMenu") #gotovi sa funkcijom, to je jedini nacin da cemo doci do ove linije, znaci vrati na pocetni meni
     except KeyError: # uneta pogresna ili nepostojeca vrednost

@@ -20,6 +20,7 @@ def verifyLogin(user):
         if _username == k and _pwd == v.password: #do we have a user with the specified name and pwd?            
             #userData = users[k]
             loggedInUser = v
+            db.setActiveUser(v)
             ui.successfullLogin(loggedInUser)
             return loggedInUser
             

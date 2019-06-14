@@ -9,11 +9,21 @@ import os
 _users = {}
 _books = {}
 
+_currentUser = False
+
 fileDir = os.path.dirname(os.path.abspath(__file__))
 _dataDir = fileDir[:-5]+"/data/" # odstrani /libs sa kraja
 
 def getUsers():
     return _users
+
+def getActiveUser():
+    return _currentUser
+
+def setActiveUser(user):
+    global _currentUser
+    _currentUser = user
+    return _currentUser
 
 def saveUsers(defaultSave=False):
     """
@@ -101,12 +111,17 @@ def isUserUsernameUnique(userClass):
     return not userExists(userClass.username)
 
 def isUserCardNumberUnique(userClass):
+    """
+        Proverava da li je data user klasa ima jednistveni broj clanske karte\n
+        exactNumber - Proveri tacno taj broj, znaci nismo prosledili klasu nego direktan broj
+    """
     cardToCheck = userClass.GetCardNumber()
-    for _,v in _users.items():
-        if cardToCheck == v.GetCardNumber():
+    for loopUname,loopUser in _users.items():
+        _cardNum = loopUser.GetCardNumber()
+        if ((cardToCheck == _cardNum) and not(userClass.GetUserName() == loopUname)):# pobrini se da ukoliko modifikujemo trenutnog bibliotekara, dozvoli da ima isti ID
             return False
 
-    #return True
+    return True
 
 def isUserDataUnique(userArg):
     return (isUserUsernameUnique(userArg) and isUserCardNumberUnique(userArg))
@@ -115,7 +130,7 @@ def addUser(user):
     username = user.GetUserName()
     if isUserDataUnique(user):
         _users[username] = user
-        return True
+        return True,"Uspesno dodati korisnik!"
     else:
         return False,"Korisnik sa tim korisnickim imenom/brojem clanske karte vec postoji!"
         
