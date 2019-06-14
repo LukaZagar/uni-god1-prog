@@ -139,13 +139,17 @@ def addUser(user):
     #     saveUsers()
 
 def isBookDataUnique(bookClass):
-    return bookClass.getID() in _books
+    for k,v in _books.items():
+        if int(k) == bookClass.getID():
+            return False
+    
+    return True
 
 def addBook(bookClass):
-    if not isBookDataUnique(bookClass):
+    if isBookDataUnique(bookClass):
         global _books
         _books[bookClass.getID()] = bookClass
-        return True
+        return True,"Uspesno dodata knjiga!"
     else:
         return False,"Knjiga sa ovim ID vec postoji!"
 
@@ -182,13 +186,13 @@ def loadBooks():
 
             for k,v in jsonData.items():
                 book = Knjiga(
-                    id = v["id"],
+                    id = int(v["id"]),
                     autor = v["Autor"],
                     godIzdavanja = v["GodIzdanja"],
-                    brojPrimeraka = v["BrojPrimeraka"],
-                    brojSlobodnihPrimeraka = v["BrojSlobodnihPrimeraka"]
+                    brojPrimeraka = int(v["BrojPrimeraka"]),
+                    brojSlobodnihPrimeraka = int(v["BrojSlobodnihPrimeraka"])
                     )
-                _books[k] = book
+                _books[int(k)] = book
         except:
             print("\n[GRESKA] Greska prilikom ucitavanja podataka")
         finally:

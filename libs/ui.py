@@ -85,11 +85,11 @@ def createNewBook(bookID=False):
     bookCountAvailable = input("Unesite broj slobodnih knjiga:: ")
     
     book = Knjiga(
-        id=bookID,
+        id=int(bookID),
         autor=bookAuthor,
         godIzdavanja=bookReleaseDate,
-        brojPrimeraka=bookCount,
-        brojSlobodnihPrimeraka=bookCountAvailable
+        brojPrimeraka=int(bookCount),
+        brojSlobodnihPrimeraka=int(bookCountAvailable)
     )
 
     #db._books[bookID] = None # ukoliko menjamo vec postojecu knjigu, moramo izbrisati vec postojecu vrednost inace ce vratiti gresku ne jedistvenosti ID parametra
