@@ -7,6 +7,12 @@ class Knjiga:
         self.BrojPrimeraka = brojPrimeraka
         self.BrojSlobodnihPrimeraka = brojSlobodnihPrimeraka
 
+    def getReleaseDate(self):
+        return self.GodIzdanja
+
+    def getAuthor(self):
+        return self.Autor
+
     def getID(self):
         return self.id
 

@@ -252,8 +252,12 @@ def addUser(user):
     #     saveUsers()
 
 
-def getUserZaduzenja():
-    pass
+def getUserZaduzenja(userClass):
+    _result = []
+    for k,v in _rented.items():
+        if int(k) == userClass.GetCardNumber():
+            _result.append(v)
+    return _result
 
 
 def isBookDataUnique(bookClass):

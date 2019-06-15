@@ -1,8 +1,10 @@
 from classes.korisnik import Korisnik
 from classes.bibliotekar import Bibliotekar
 from classes.knjiga import Knjiga
+from classes.zaduzenje import Zaduzenje
 import libs.db as db
 
+import datetime
 
 def showLogin():
     print("\n\nUlogovanje u sistem...")
@@ -170,18 +172,76 @@ def searchUsers(searchType):
     return results
 
 
+def searchBooks(searchType):
+    results = [] #id, autor,god izdanja
+    counter = 0
+    if searchType == "id":
+        searchFor = int(input("Unesite ID knjige:: "))
+        for k, v in db._books.items():
+            if v.getID() == searchFor:
+                results.insert(counter, v)
+                counter += 1
+    if searchType == "author":
+        searchFor = input("Unesite Autora knjige:: ")
+        for k, v in db._books.items():
+            if v.getAuthor() == searchFor:
+                results.insert(counter, v)
+                counter += 1
+    if searchType == "releaseDate":
+        searchFor = input("Unesite datum izdanja knjige:: ")
+        for k, v in db._books.items():
+            if str(v.getReleaseDate()) in searchFor:
+                results.insert(counter, v)
+                counter += 1
+
+    return results
+
+def zaduzi(userClass,bookClass):
+    zad = Zaduzenje(
+        bookID = bookClass.getID(),
+        dateIssued = str(datetime.datetime.now()),
+        dateReturned = "N/A",
+        cardNumber = userClass.GetCardNumber()
+    )
+    db.addZaduzenje(zad)
+    db.saveRentedBooks()
+    db.loadRentedBooks()
+
 def handleUsersSearch(res):
     print("Rezultat pretrage korisnika:")
     for pos in range(len(res)):
         _currUser = res[pos]
         print(f"\t\t[{pos}]: {_currUser.ToJSON()}")
-    selectedUser = input(
-        "Izaberite korisnika kojeg zelite da zaduzite/razduzite:: ")
+    selectedUser = input("Izaberite korisnika kojeg zelite da zaduzite/razduzite:: ")
     _user = res[int(selectedUser)]
-    whatToDo = int(
-        input("Zelite da\n\t[1].Zaduzite\n\t[2].Razduzite\nIzaberite opciju:: "))
-    if whatToDo == 1:
-        pass
+
+    _due = db.getUserZaduzenja(_user)
+    print("Trenutna zaduzenja korisnika: \n")
+    for pos in range(len(_due)):
+        zad = _due[pos]
+        print(f"\t\t[{pos}] {zad.ToJSON()}\n")
+
+    whatToDo = int(input("Zelite da\n\t[1]Zaduzite\n\t[2]Razduzite\nIzaberite opciju:: "))
+    if whatToDo == 1: #Zaduzivanje
+        searchMethod = input("Da li zelite da pretrazite putem:\n\t[1].ID Knjige\n\t[2].Autorom Knjige\n\t[3].Godinom Izdanja knjige\nIzaberite opciju::")
+        bookRes = None
+        if searchMethod == "1":
+            bookRes = searchBooks("id")
+        elif searchMethod == "2":
+            bookRes = searchBooks("author")
+        else:
+            bookRes = searchBooks("releaseDate")
+
+        print("Rezultat pretrage je:")
+        for count in range(len(bookRes)):
+            _currLoopBook = bookRes[count]
+            print(f"[{count}]. {_currLoopBook.toJSON()}")
+        try:
+            zaduziKnjiguNum = int(input("Unesite redni broj knjige koji zelite da zaduzite korisnika:: "))
+            zaduzi(_user,bookRes[zaduziKnjiguNum])
+        except IndexError:
+            input(f"Ne postoji opcija {searchMethod} !")
+            handleUsersSearch(res=res)
     else:
         pass
 

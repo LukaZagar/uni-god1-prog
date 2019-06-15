@@ -1,9 +1,9 @@
 {
     "1": {
-        "bookID": 1,
+        "bookID": 0,
         "cardNumber": 1,
-        "dateIssued": "1/1/1970",
-        "dateReturned": "2/2/1970"
+        "dateIssued": "2019-06-15 16:41:09.067726",
+        "dateReturned": "N/A"
     },
     "2": {
         "bookID": 2,
