@@ -8,6 +8,7 @@ from classes.bibliotekar import Bibliotekar
 
 db.loadUsers()
 db.loadBooks()
+db.loadRentedBooks()
 
 def verifyLogin(user):
     if user == None : return 
@@ -24,12 +25,9 @@ def verifyLogin(user):
             ui.successfullLogin(loggedInUser)
             return loggedInUser
             
-        
     print("<NETACNA LOZINKA ILI KORISNICKO IME>")
     return False  
             
-
-
 exit = False
 while not exit: # continious ui display
     logingInUser = ui.showLogin() # {username,pwd}

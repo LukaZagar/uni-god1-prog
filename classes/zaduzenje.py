@@ -4,3 +4,9 @@ class Zaduzenje():
         self.dateIssued= dateIssued
         self.dateReturned = dateReturned
         self.cardNumber = cardNumber
+
+    def getCardNumber(self):
+        return self.cardNumber
+
+    def ToJSON(self):
+        return self.__dict__

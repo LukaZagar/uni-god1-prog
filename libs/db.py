@@ -2,12 +2,14 @@ import json
 from classes.korisnik import Korisnik
 from classes.bibliotekar import Bibliotekar
 from classes.knjiga import Knjiga
+from classes.zaduzenje import Zaduzenje
 
 import sys
 import os
 
 _users = {}
 _books = {}
+_rented = {}
 
 _currentUser = False
 
@@ -69,7 +71,6 @@ def saveUsers(defaultSave=False):
     # finally:
     #     print("\nGotovo cuvanje korisnika")
 
-
 def loadUsers():
     """
         Ucitaj korisnike iz users.json, izbacuje gresku ukoliko nije u mogucnosti da ucita, ukoliko fajl nepostoji , kreira default fajl.
@@ -115,6 +116,80 @@ def loadUsers():
         saveUsers(defaultSave=True)
         loadUsers()
 
+def addZaduzenje(zadClass):
+    zadCardNum = zadClass.getCardNumber()
+    _rented[zadCardNum] = zadClass
+    return True
+
+def saveRentedBooks(defaultSave=False):
+    """
+        Sacuva zaduzenja korisnika,u JSON fajlu kljuc liste je cardNumber korisnika
+        defaultSave- sacuvaj test(default) vrednosti 
+    """
+
+    rentedDir = _dataDir+"rented.json"
+    print(f"Cuvanje podataka o zaduzenjima u direktorijum {rentedDir}")
+
+    if defaultSave:
+        zad1 = Zaduzenje(
+            bookID=0,
+            dateIssued="1/1/1970",
+            dateReturned="2/2/1970",
+            cardNumber=1
+        )
+        zad2 = Zaduzenje(
+            bookID=1,
+            dateIssued="1/1/1970",
+            dateReturned="2/2/1970",
+            cardNumber=1
+        )
+        zad3 = Zaduzenje(
+            bookID=2,
+            dateIssued="1/1/1970",
+            dateReturned="2/2/1970",
+            cardNumber=2
+        )
+        addZaduzenje(zad1)
+        addZaduzenje(zad2)
+        addZaduzenje(zad3)
+    
+    _saveDict = {}
+    for _,_zaduzenje in _rented.items():
+        _saveDict[_zaduzenje.getCardNumber()] = _zaduzenje.ToJSON()    # kljuc je bio pod '' navodnicima, a json to nepodrzava
+
+    #try:
+    with open(rentedDir, 'w') as outfile:
+        jsonFormat = json.dumps(_saveDict,sort_keys=True,indent=4)
+        outfile.write(jsonFormat)
+        print("Uspesno sacuvani podatci zaduzenja!")
+
+def loadRentedBooks():
+    rentedDir = _dataDir+"rented.json"
+    
+    if os.path.isfile(rentedDir) and os.stat(rentedDir).st_size != 0: # da li postoji fajl i da nije prazan
+        try:
+            print("Fajl sa zaduzenjima postoji, ucitavanje...")
+            jsonFile = open(rentedDir)
+            jsonStr = jsonFile.read()
+            jsonData = json.loads(jsonStr)
+            global _users
+            for _userCardNum,_rentedData in jsonData.items():
+                zad = Zaduzenje(
+                    bookID=_rentedData["bookID"],
+                    dateIssued=_rentedData["dateIssued"],
+                    dateReturned=_rentedData["dateReturned"],
+                    cardNumber=int(_rentedData["cardNumber"])
+                )
+                addZaduzenje(zad)
+        except:
+            print("\n[GRESKA] Greska prilikom ucitavanja podataka")
+        finally:
+            print("Gotovo ucitavanje korisnika!") 
+    else:
+        print("Fajl sa zaduzenjima prazan ili greska, cuvanje default vrednosti...")
+        saveRentedBooks(defaultSave=True)
+        loadRentedBooks()
+
 def userExists(uname):
     return uname in _users
 
@@ -135,7 +210,7 @@ def isUserCardNumberUnique(userClass):
     return True
 
 def librarianIDExists(accID):
-    for k,v in _users.items():
+    for _,v in _users.items():
         loopAccLevel= v.GetAccessLevel()
         if loopAccLevel == 1 and v.getID() == accID:
             return True
@@ -157,8 +232,11 @@ def addUser(user):
     #     _users[username] = user
     #     saveUsers()
 
+def getUserZaduzenja():
+    pass
+
 def isBookDataUnique(bookClass):
-    for k,v in _books.items():
+    for k,_ in _books.items():
         if int(k) == bookClass.getID():
             return False
     
