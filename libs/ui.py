@@ -118,7 +118,7 @@ def createNewBook(bookID=False):
     )
 
     # db._books[bookID] = None # ukoliko menjamo vec postojecu knjigu, moramo izbrisati vec postojecu vrednost inace ce vratiti gresku ne jedistvenosti ID parametra
-    db._books.pop(bookID, None)
+    db._books.pop(int(bookID), None)
 
     addBookRes, errorMsg = db.addBook(book)
     if addBookRes:
@@ -135,8 +135,7 @@ def editBook():
     for k, v in db._books.items():
         jsonData = v.toJSON()
         print(f"\t[{k}]:\n\t\t {jsonData}")
-    change = input(
-        "Izaberite redni broj knjige koje podatke zelite da izmenite:: ")
+    change = input("Izaberite redni broj knjige koje podatke zelite da izmenite:: ")
     createNewBook(change)
 
 
@@ -230,16 +229,6 @@ _uiMenus = {
                 "function": lambda: handleUsersSearch(searchUsers("lastName"))
             },
         },
-        # "userBookManagment":{
-        #     1:{
-        #         "text":"Zaduzi korisnika",
-        #         "onSelect":"searchUserMethod"
-        #     },
-        #     2:{
-        #         "text":"Razduzi korisnika",
-        #         "onSelect":"searchUserMethod"
-        #     }
-        # },
         "modifyBook": {
             1: {
                 "text": "Unos nove knjige",
