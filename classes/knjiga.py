@@ -7,6 +7,9 @@ class Knjiga:
         self.BrojPrimeraka = brojPrimeraka
         self.BrojSlobodnihPrimeraka = brojSlobodnihPrimeraka
 
+    def canBeRented(self):
+        return self.BrojSlobodnihPrimeraka > 0
+
     def removeBaseStock(self,ammt=1):
         self.BrojPrimeraka = int(self.BrojPrimeraka) - ammt
 

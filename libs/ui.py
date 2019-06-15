@@ -184,13 +184,14 @@ def searchBooks(searchType):
     if searchType == "author":
         searchFor = input("Unesite Autora knjige:: ")
         for k, v in db._books.items():
-            if v.getAuthor() == searchFor:
+            _author = v.getAuthor()
+            if str.lower(searchFor) in str.lower(_author):
                 results.insert(counter, v)
                 counter += 1
     if searchType == "releaseDate":
         searchFor = input("Unesite datum izdanja knjige:: ")
         for k, v in db._books.items():
-            if str(v.getReleaseDate()) in searchFor:
+            if str.lower(searchFor) in str.lower(str(v.getReleaseDate())):
                 results.insert(counter, v)
                 counter += 1
 
@@ -299,8 +300,32 @@ def deleteUser():
     else:
         input(f"Korisnik {_userToDelete.GetUserName()} trenutno ima zaduzenja, nemozete ga obrisati!")
         
-    
-    
+
+def getUserDueBooks():
+    print("Trenutno zaduzenje knjige su:")
+    userClass = db.getActiveUser()
+    for k,zaduzenjeClass in db._rented.items():
+        if zaduzenjeClass.getCardNumber() == userClass.GetCardNumber():
+            print(f"\t\t [{k}] {zaduzenjeClass.ToJSON()}")
+
+
+def searchBooksUser():
+    searchMethod = input("Da li zelite da pretrazite putem:\n\t[1].ID Knjige\n\t[2].Autorom Knjige\n\t[3].Godinom Izdanja knjige\nIzaberite opciju::")
+    bookRes = None
+    if searchMethod == "1":
+        bookRes = searchBooks("id")
+    elif searchMethod == "2":
+        bookRes = searchBooks("author")
+    else:
+        bookRes = searchBooks("releaseDate")
+
+    print("Rezultat pretrage je:")
+
+    for pos in range(len(bookRes)):
+        _currBook = bookRes[pos]
+        if _currBook.canBeRented():
+            print(f"\t\t[{pos}] {_currBook.toJSON()}")
+
 
 _uiMenus = {
     1: {  # bibliotekar
@@ -371,15 +396,15 @@ _uiMenus = {
         "mainMenu": {
             1: {
                 "text": "Pregled zaduzenih knjiga.",
-                "onSelect": "",
+                "function": getUserDueBooks,
             },
             2: {
                 "text": "Pretrazivanje knjiga.",
-                "onSelect": "",
+                "function": searchBooksUser,
             },
             3: {
                 "text": "Izmena podataka korisnickog naloga.",
-                "onSelect": "",
+                "function": lambda: createNewUser(db.getActiveUser()),
             },
         },
     },

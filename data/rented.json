@@ -7,7 +7,7 @@
     },
     "2": {
         "bookID": 2,
-        "cardNumber": 2,
+        "cardNumber": 0,
         "dateIssued": "1/1/1970",
         "dateReturned": "2/2/1970"
     }
