@@ -7,6 +7,12 @@ class Knjiga:
         self.BrojPrimeraka = brojPrimeraka
         self.BrojSlobodnihPrimeraka = brojSlobodnihPrimeraka
 
+    def removeBaseStock(self,ammt=1):
+        self.BrojPrimeraka = int(self.BrojPrimeraka) - ammt
+
+    def increaseStock(self,ammt=1):
+        self.BrojSlobodnihPrimeraka = int(self.BrojSlobodnihPrimeraka) + ammt
+
     def getReleaseDate(self):
         return self.GodIzdanja
 

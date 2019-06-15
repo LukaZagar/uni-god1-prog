@@ -207,6 +207,16 @@ def zaduzi(userClass,bookClass):
     db.saveRentedBooks()
     db.loadRentedBooks()
 
+
+def razduzi(userClass,zadClass):
+    db.removeZaduzenje(zadClass)
+    
+    db.saveBooks()
+    db.saveRentedBooks()
+    
+    db.loadRentedBooks()
+    db.loadBooks()
+
 def handleUsersSearch(res):
     print("Rezultat pretrage korisnika:")
     for pos in range(len(res)):
@@ -219,7 +229,7 @@ def handleUsersSearch(res):
     print("Trenutna zaduzenja korisnika: \n")
     for pos in range(len(_due)):
         zad = _due[pos]
-        print(f"\t\t[{pos}] {zad.ToJSON()}\n")
+        print(f"\t\t [{pos}] {zad.ToJSON()}\n")
 
     whatToDo = int(input("Zelite da\n\t[1]Zaduzite\n\t[2]Razduzite\nIzaberite opciju:: "))
     if whatToDo == 1: #Zaduzivanje
@@ -235,16 +245,26 @@ def handleUsersSearch(res):
         print("Rezultat pretrage je:")
         for count in range(len(bookRes)):
             _currLoopBook = bookRes[count]
-            print(f"[{count}]. {_currLoopBook.toJSON()}")
+            print(f"\t\t[{count}] {_currLoopBook.toJSON()}")
         try:
             zaduziKnjiguNum = int(input("Unesite redni broj knjige koji zelite da zaduzite korisnika:: "))
             zaduzi(_user,bookRes[zaduziKnjiguNum])
         except IndexError:
             input(f"Ne postoji opcija {searchMethod} !")
             handleUsersSearch(res=res)
-    else:
-        pass
+    else: #Razduzivanje 
+        _razduziInput = int(input("Unesite redni broj zaduzenja koji zelite da razduzite korisnika:: "))
+        razduzi(_user,_due[_razduziInput])
 
+def destroyBook():
+    print("U bazi su trenutno sledece knjige: ")
+    for k,v in db._books.items():
+        print(f"\t\t[{k}] {v.toJSON()}")
+    _kill = int(input("Unesite redni broj knjige koji zelite da uklonite:: "))
+    _ammt = int(input("Koliko primeraka da se ukloni?::"))
+    db._books[_kill].removeBaseStock(_ammt)
+    db.saveBooks()
+    db.loadBooks()
 
 _uiMenus = {
     1: {  # bibliotekar
@@ -267,7 +287,7 @@ _uiMenus = {
             },
             5: {
                 "text": "Rashodovanje knjiga",
-                "onSelect": "modifyUser"
+                "function": destroyBook
             },
             6: {
                 "text": "Brisanje Korisnika",

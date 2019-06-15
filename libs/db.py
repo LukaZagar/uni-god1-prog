@@ -124,9 +124,21 @@ def loadUsers():
         loadUsers()
 
 
+def increaseBookStock(bookClass,ammount=1):
+    bookClass.increaseStock(ammount)
+
 def addZaduzenje(zadClass):
     zadCardNum = zadClass.getCardNumber()
     _rented[zadCardNum] = zadClass
+    return True
+
+
+def removeZaduzenje(zadClass):
+    #zadCardNum = zadClass.getCardNumber()
+    #_rented.pop(zadCardNum,None)
+    zadClass.setReturned()
+    _book = _books[zadClass.getBookID()]
+    _book.increaseStock(1)
     return True
 
 
@@ -266,7 +278,7 @@ def isBookDataUnique(bookClass):
             return False
 
     return True
-
+ 
 
 def addBook(bookClass):
     if isBookDataUnique(bookClass):
