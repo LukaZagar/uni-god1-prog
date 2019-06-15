@@ -6,13 +6,14 @@ class Korisnik:
     # 1.Bibliotekar
     # NILL .Korisnik
 
-    def __init__(self, username, fname, lname, password, cardNumber, accType=2):
+    def __init__(self, username, fname, lname, password, cardNumber, accType=2, deleted=False):
         self.username = username
         self.fname = fname
         self.lname = lname
         self.password = password
         self.cardNumber = cardNumber
         self.accessLevel = accType or 2
+        self.deleted = deleted or False
 
     def GetCardNumber(self):
         return self.cardNumber
@@ -41,6 +42,9 @@ class Korisnik:
             _tostringText = "Korisnik"
 
         return _tostringText
+
+    def isDeleted(self):
+        return self.deleted
 
     def Delete(self, izbrisi):
         self.deleted = izbrisi

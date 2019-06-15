@@ -102,7 +102,8 @@ def loadUsers():
                         lname=v["lname"],
                         password=v["password"],
                         cardNumber=v["cardNumber"],
-                        accType=v["accessLevel"]
+                        accType=v["accessLevel"],
+                        deleted=v["deleted"]
                     )
                 else:
                     korisnik = Korisnik(
@@ -111,7 +112,8 @@ def loadUsers():
                         lname=v["lname"],
                         password=v["password"],
                         cardNumber=v["cardNumber"],
-                        accType=v["accessLevel"]
+                        accType=v["accessLevel"],
+                        deleted=v["deleted"]
                     )
                 _users[k] = korisnik
         except:

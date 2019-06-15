@@ -2,6 +2,7 @@
     "LukaZ": {
         "accessLevel": 2,
         "cardNumber": 0,
+        "deleted": false,
         "fname": "Luka",
         "lname": "Zagar",
         "password": "123",
@@ -10,6 +11,7 @@
     "Petar66": {
         "accessLevel": 1,
         "cardNumber": 1,
+        "deleted": false,
         "fname": "Petar",
         "id": 2,
         "lname": "Petric",
@@ -19,6 +21,7 @@
     "dasd": {
         "accessLevel": 1,
         "cardNumber": 2,
+        "deleted": true,
         "fname": "asd",
         "id": 1,
         "lname": "asd",

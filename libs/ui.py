@@ -266,6 +266,25 @@ def destroyBook():
     db.saveBooks()
     db.loadBooks()
 
+def deleteUser():
+    #counter = 0
+    _tempList = []
+    for _,user in db.getUsers().items(): #username je kljuc
+        if not user.isDeleted():
+            #print(f"[{counter}] {user.ToJSON()}")
+            _tempList.append(user)
+            #counter += 1
+
+    for pos in range(len(_tempList)):
+        _currUser = _tempList[pos]
+        print(f"[{pos}] {_currUser.ToJSON()}")
+
+    _order66 = int(input("Izaberite korisnika kojeg zelite da izbrisete:: "))
+    _tempList[_order66].Delete(True)
+    
+    db.saveUsers()
+    db.loadUsers()
+
 _uiMenus = {
     1: {  # bibliotekar
         "mainMenu": {
@@ -291,7 +310,7 @@ _uiMenus = {
             },
             6: {
                 "text": "Brisanje Korisnika",
-                "onSelect": "modifyUser"
+                "function": deleteUser
             }
         },
         "searchUserMethod": {
