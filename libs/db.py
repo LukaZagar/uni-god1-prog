@@ -22,10 +22,17 @@ def getUsers():
 
 
 def getActiveUser():
+    """
+        Vraca trenutno ulogovanog korisnika
+    """
+
     return _currentUser
 
 
 def setActiveUser(user):
+    """
+        Postavlja trenutno aktivnog korisnika
+    """
     global _currentUser
     _currentUser = user
     return _currentUser
@@ -127,15 +134,26 @@ def loadUsers():
 
 
 def increaseBookStock(bookClass,ammount=1):
+    """
+        Povecava stanje jedne knjige
+    """
+
     bookClass.increaseStock(ammount)
 
 def addZaduzenje(zadClass):
+    """
+        Dodaje zaduzenje
+    """
+
     zadCardNum = zadClass.getCardNumber()
     _rented[zadCardNum] = zadClass
     return True
 
 
 def removeZaduzenje(zadClass):
+    """
+        Uklanja zaduzenje
+    """
     #zadCardNum = zadClass.getCardNumber()
     #_rented.pop(zadCardNum,None)
     zadClass.setReturned()
@@ -189,6 +207,10 @@ def saveRentedBooks(defaultSave=False):
 
 
 def loadRentedBooks():
+    """
+        Ucitava zaduzenja
+    """
+
     rentedDir = _dataDir+"rented.json"
 
     # da li postoji fajl i da nije prazan
@@ -218,10 +240,16 @@ def loadRentedBooks():
 
 
 def userExists(uname):
+    """
+        Mala funkcija za proveru da li korisnik postoji
+    """
     return uname in _users
 
 
 def isUserUsernameUnique(userClass):
+    """
+        Da li je dato korisnicko ime jednistveno
+    """
     return not userExists(userClass.username)
 
 
@@ -241,6 +269,9 @@ def isUserCardNumberUnique(userClass):
 
 
 def librarianIDExists(accID):
+    """
+        Da li postoji bibliotekar sa datim ID-jem
+    """
     for _, v in _users.items():
         loopAccLevel = v.GetAccessLevel()
         if loopAccLevel == 1 and v.getID() == accID:
@@ -250,10 +281,17 @@ def librarianIDExists(accID):
 
 
 def isUserDataUnique(userArg):
+    """
+        Da li su podatci jedinstveni za dati korisnicki nalog ( oni koji moraju da budu jedistveni)
+    """
     return (isUserUsernameUnique(userArg) and isUserCardNumberUnique(userArg))
 
 
 def addUser(user):
+    """
+        Dodaje korisnika u bazu podataka
+        NAPOMENA: Potrebno je naknadno sacuvati podatke korisnika
+    """
     username = user.GetUserName()
     if isUserDataUnique(user):
         _users[username] = user
@@ -267,6 +305,9 @@ def addUser(user):
 
 
 def getUserZaduzenja(userClass):
+    """
+        Vraca zaduzenja datog korisnika
+    """
     _result = []
     for k,v in _rented.items():
         if int(k) == userClass.GetCardNumber():
@@ -275,6 +316,9 @@ def getUserZaduzenja(userClass):
 
 
 def isBookDataUnique(bookClass):
+    """
+        Da li su podatci date knjige jedistveni ( oni koji moraju da budu jednistveni )
+    """
     for k, _ in _books.items():
         if int(k) == bookClass.getID():
             return False
@@ -283,6 +327,10 @@ def isBookDataUnique(bookClass):
  
 
 def addBook(bookClass):
+    """
+        Dodaje knjigu u bazu podataka.
+        NAPOMENA: Potrebno je naknadno sacuvati podatke 
+    """
     if isBookDataUnique(bookClass):
         global _books
         _books[bookClass.getID()] = bookClass
@@ -292,6 +340,9 @@ def addBook(bookClass):
 
 
 def saveBooks(defaultSave=False):
+    """
+        Cuva knjige u JSON fajl
+    """
     bookDir = _dataDir+"books.json"
     if defaultSave:
         book1 = Knjiga(
@@ -315,6 +366,10 @@ def saveBooks(defaultSave=False):
 
 
 def loadBooks():
+    """
+        Ucitava podatke iz JSON fajla
+    """
+
     bookDir = _dataDir+"books.json"
     # da li postoji fajl i da nije prazan
     if os.path.isfile(bookDir) and os.stat(bookDir).st_size != 0:

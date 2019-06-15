@@ -12,6 +12,10 @@ db.loadRentedBooks()
 
 
 def verifyLogin(user):
+    """
+        Utvrdjuje da li su uneti login credentiali tacni
+    """
+
     if user == None:
         return
     _username = user["Username"]

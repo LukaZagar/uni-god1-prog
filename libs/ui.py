@@ -7,6 +7,11 @@ import libs.db as db
 import datetime
 
 def showLogin():
+    """
+        Prikazuje login deo konzolne aplikacije
+    """
+
+
     print("\n\nUlogovanje u sistem...")
     print('\n\nNapomena: Unesite "Q" ili "q" da odustanete od prijave')
     username = input("Unesite korisnicko ime: ")
@@ -33,6 +38,9 @@ def successfullLogin(userClass):
 
 
 def showUserMenu(user):
+    """
+        Prikazuje meni na osnovu prosledjenog korisnika
+    """
     global activeUser
     activeUser = user
     # userLevel = userLevel or 0
@@ -45,6 +53,9 @@ def showUserMenu(user):
 
 
 def createNewUser(providedUser=False):
+    """
+        Kreira novog Bibliotekara/Korisnika
+    """
     accID = None
     accType = input(
         "Unesite numerican modifikator pristupa naloga (2= Korisnik 1=Bibliotekar):: ") if not providedUser else providedUser.GetAccessLevel()
@@ -104,6 +115,10 @@ def createNewUser(providedUser=False):
 
 
 def createNewBook(bookID=False):
+    """
+        Kreira novu knjigu od inputa
+    """
+
     # Ukoliko smo vec prosledili ID parametar, nemoj pitati za input
     bookID = input("Unesite ID knjige:: ") if not bookID else bookID
     bookAuthor = input("Unesite autora knjige:: ")
@@ -133,6 +148,9 @@ def createNewBook(bookID=False):
 
 
 def editBook():
+    """
+        Edituje izabranu knjigu
+    """
     print("U bazi su trenutno sledece knjige: ")
     for k, v in db._books.items():
         jsonData = v.toJSON()
@@ -142,11 +160,18 @@ def editBook():
 
 
 def modifyLibrarian():
+    """
+        Modifikuje trenutno prijavljenog bibliotekara
+    """
     _newUser = createNewUser(db.getActiveUser())
     return _newUser
 
 
 def searchUsers(searchType):
+    """
+        Pretraga korisnika odabranom metodom
+    """
+
     results = []
     counter = 0
     if searchType == "cardNum":
@@ -173,6 +198,9 @@ def searchUsers(searchType):
 
 
 def searchBooks(searchType):
+    """
+        Modularna funkcija za pretrago knjiga, case insensitive
+    """
     results = [] #id, autor,god izdanja
     counter = 0
     if searchType == "id":
@@ -198,6 +226,9 @@ def searchBooks(searchType):
     return results
 
 def zaduzi(userClass,bookClass):
+    """
+        Razduzuje datog korisnika
+    """
     zad = Zaduzenje(
         bookID = bookClass.getID(),
         dateIssued = str(datetime.datetime.now()),
@@ -210,6 +241,10 @@ def zaduzi(userClass,bookClass):
 
 
 def razduzi(userClass,zadClass):
+    """
+        Razduzuje datog korisnika
+    """
+
     db.removeZaduzenje(zadClass)
     
     db.saveBooks()
@@ -219,6 +254,11 @@ def razduzi(userClass,zadClass):
     db.loadBooks()
 
 def handleUsersSearch(res):
+    """
+        Glavni hendeler za zaduzivanje/razduzivanje
+    """
+
+
     print("Rezultat pretrage korisnika:")
     for pos in range(len(res)):
         _currUser = res[pos]
@@ -259,6 +299,10 @@ def handleUsersSearch(res):
 
 
 def destroyBook():
+    """
+        Pita korisnika koju knjigu zeli da izbrise i koliko
+    """
+
     print("U bazi su trenutno sledece knjige: ")
     for k,v in db._books.items():
         print(f"\t\t[{k}] {v.toJSON()}")
@@ -270,6 +314,9 @@ def destroyBook():
 
 
 def canDeleteUser(userClass):
+    """
+        Proverava da li dati korisnike se moze izbrisati ( da li ima zaduzenja)
+    """
     for _,zaduzenjeClass in db._rented:
         if int(zaduzenjeClass.getCardNumber()) == int(userClass.GetCardNumber()):
             return False
@@ -277,6 +324,10 @@ def canDeleteUser(userClass):
 
 
 def deleteUser():
+    """
+        Hendeler za brisanje korisnika na osnovu inputa
+    """
+
     #counter = 0
     _tempList = []
     for _,user in db.getUsers().items(): #username je kljuc
@@ -310,6 +361,10 @@ def getUserDueBooks():
 
 
 def searchBooksUser():
+    """
+        Funkcija koja obradjuje korisnicki search knjiga
+    """
+
     searchMethod = input("Da li zelite da pretrazite putem:\n\t[1].ID Knjige\n\t[2].Autorom Knjige\n\t[3].Godinom Izdanja knjige\nIzaberite opciju::")
     bookRes = None
     if searchMethod == "1":
@@ -412,6 +467,10 @@ _uiMenus = {
 
 
 def printModularMenu(id):
+    """
+        Ispisuje glavni meni sve dok se ne unsese "q"
+    """
+
     result = False
     acclvl = activeUser.GetAccessLevel()
 
