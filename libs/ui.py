@@ -256,6 +256,7 @@ def handleUsersSearch(res):
         _razduziInput = int(input("Unesite redni broj zaduzenja koji zelite da razduzite korisnika:: "))
         razduzi(_user,_due[_razduziInput])
 
+
 def destroyBook():
     print("U bazi su trenutno sledece knjige: ")
     for k,v in db._books.items():
@@ -265,6 +266,14 @@ def destroyBook():
     db._books[_kill].removeBaseStock(_ammt)
     db.saveBooks()
     db.loadBooks()
+
+
+def canDeleteUser(userClass):
+    for _,zaduzenjeClass in db._rented:
+        if int(zaduzenjeClass.getCardNumber()) == int(userClass.GetCardNumber()):
+            return False
+    return True
+
 
 def deleteUser():
     #counter = 0
@@ -280,10 +289,18 @@ def deleteUser():
         print(f"[{pos}] {_currUser.ToJSON()}")
 
     _order66 = int(input("Izaberite korisnika kojeg zelite da izbrisete:: "))
-    _tempList[_order66].Delete(True)
+    _userToDelete = _tempList[_order66]
+
+
+    if canDeleteUser(_userToDelete):
+        _tempList[_order66].Delete(True)
+        db.saveUsers()
+        db.loadUsers()
+    else:
+        input(f"Korisnik {_userToDelete.GetUserName()} trenutno ima zaduzenja, nemozete ga obrisati!")
+        
     
-    db.saveUsers()
-    db.loadUsers()
+    
 
 _uiMenus = {
     1: {  # bibliotekar

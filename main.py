@@ -21,7 +21,10 @@ def verifyLogin(user):
 
     for k, v in users.items():
         if _username == k and _pwd == v.password:  # do we have a user with the specified name and pwd?
-            #userData = users[k]
+            if v.isDeleted():
+                input("KORISNIK JE IZBRISAN")
+                return
+            
             loggedInUser = v
             db.setActiveUser(v)
             ui.successfullLogin(loggedInUser)
